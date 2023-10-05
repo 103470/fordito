@@ -1,0 +1,115 @@
+    internal class sourceHandler
+    {
+        IDictionary<string, string> R = new Dictionary<string, string>();
+
+        public string lineComments = @"//.*?\n";
+        public string blockComments = @"/[*] [\w \d \s \n]+ [*]/";
+
+
+        public string source;
+        public string dest;
+        public string content;
+
+        public string Source
+        {
+            private set { source = value; }
+            get { return source; }
+        }
+        public string Dest
+        {
+            private set { dest = value; }
+            get { return dest; }
+        }
+        public string Content
+        {
+            private set { content = value; }
+            get { return content; }
+        }
+
+
+        public void OpenToWrite()
+        {
+            try
+            {
+                StreamWriter sw = new StreamWriter(File.OpenWrite(dest));
+                sw.Write(content);
+
+                sw.Flush();
+                sw.Close();
+            }
+            catch (IOException)
+            {
+                throw new Exception("Io exception");
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"{e.Message}");
+            }
+        }
+        public void OpenRead()
+        {
+            try
+            {
+                StreamReader sr = new StreamReader(File.OpenRead("be.txt"));
+                content = sr.ReadToEnd();
+                sr.Close();
+            }
+            catch (IOException)
+            {
+                throw new IOException();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        public sourceHandler() { }
+        public sourceHandler(string source, string dest, string content)
+        {
+            this.Source = source;
+            this.Dest = dest;
+            this.Content = content;
+        }
+
+        /*void replaceContent(string str)
+        {
+
+            while (str.Contains("  ")) str = str.Replace("  ", " ");
+
+        }
+        */
+
+        public void replaceContent()
+        {
+            try
+            {
+                StreamReader sr = new StreamReader(File.OpenRead("be.txt"));
+                string fileAllData = sr.ReadToEnd();
+                sr.Close();
+                string[] replaces1 = fileAllData.Split('\n');
+                content = Regex.Replace(content, lineComments, " ");
+                content = Regex.Replace(content, blockComments, " ");
+                foreach (string r in replaces1)
+                {
+                    
+                    string[] r2 = r.Split(',');
+                    if(r2.Count() > 1)
+                    {
+                        R.Add(r2[0], r2[1]);
+                    }
+                    
+                }
+                
+            }
+            catch (IOException)
+            {
+                throw new IOException();
+            }
+        }
+
+        //IDictionary<string> dictionaRY = new Dictionary<string, string>();
+        //fajlkezelo hazi
+        //mukodjenek a cserek ugy hogy fajlbol olvasok be dictionary vagy mi itt semmit nem ertettem adni kell default source meg destination
+
+    }
