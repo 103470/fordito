@@ -1,6 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
     internal class sourceHandler
     {
-        IDictionary<string, string> R = new Dictionary<string, string>();
+        Dictionary<string, string> R = new Dictionary<string, string>();
+        List<string> SymbolTable = new List<string>();
+
 
         public string lineComments = @"//.*?\n";
         public string blockComments = @"/[*] [\w \d \s \n]+ [*]/";
@@ -64,6 +75,8 @@
             }
         }
 
+
+
         public sourceHandler() { }
         public sourceHandler(string source, string dest, string content)
         {
@@ -92,15 +105,15 @@
                 content = Regex.Replace(content, blockComments, " ");
                 foreach (string r in replaces1)
                 {
-                    
+
                     string[] r2 = r.Split(',');
-                    if(r2.Count() > 1)
+                    if (r2.Count() > 1)
                     {
                         R.Add(r2[0], r2[1]);
                     }
-                    
+
                 }
-                
+
             }
             catch (IOException)
             {
@@ -108,8 +121,43 @@
             }
         }
 
-        //IDictionary<string> dictionaRY = new Dictionary<string, string>();
-        //fajlkezelo hazi
-        //mukodjenek a cserek ugy hogy fajlbol olvasok be dictionary vagy mi itt semmit nem ertettem adni kell default source meg destination
+        string regexVariables = @"([a-z-_]+)";
+        string regexConstant = @"([0-9]+)";
 
+        protected string replaceSymbolTableContent(string occurance)
+        {
+            string index;
+            if (!SymbolTable.Contains(occurance))
+            {
+                SymbolTable.Add(occurance);
+                index = SymbolTable.Count.ToString();
+            }
+            else
+            {
+                index = SymbolTable.IndexOf(occurance).ToString();
+            }
+
+            string res = "00" + index;
+            return res.Substring(res.Length-3);
+        }
+
+        public void lexerSync()
+        {
+
+            content = Regex.Replace(content, regexVariables, 
+                adat1 => replaceSymbolTableContent(adat1.Groups[1].Value));
+            content = Regex.Replace(content, regexConstant,
+                adat1 => replaceSymbolTableContent(adat1.Groups[1].Value));
+
+        }
+        public void lexerBasic()
+        {
+            content = Regex.Replace(content, regexVariables, replaceSymbolTableContent(@"$1"));
+            content = Regex.Replace(content, regexConstant, replaceSymbolTableContent(@"$1"));
+
+
+        } 
+
+       
     }
+}
