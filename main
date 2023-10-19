@@ -1,6 +1,12 @@
  string content = null;
- sourceHandler s1 = new sourceHandler("C:\\Users\\user\\Documents\\u4ufuk\\fordito\\bin\\Debug\\net6.0\\be.txt", "C:\\Users\\user\\Documents\\u4ufuk\\fordito\\bin\\Debug\\net6.0\\ki.txt", content);
+ sourceHandler s1 = new sourceHandler("C:\\Users\\user\\Documents\\ssr0ti\\ConsoleApp1\\bin\\Debug\\net6.0\\be.txt", "C:\\Users\\user\\Documents\\ssr0ti\\ConsoleApp1\\bin\\Debug\\net6.0\\ki.txt", content);
+ 
 
  s1.OpenRead();
  s1.replaceContent();
  s1.OpenToWrite();
+
+ regex0 R = new regex0("q0", "+123");
+ 
+ Console.WriteLine(R.match());
+ Console.ReadKey();
