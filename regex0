@@ -1,0 +1,65 @@
+public string all;
+public string input;
+int i = 0;
+
+// temporary function
+char convert(char c)
+{
+    if (char.IsDigit(c))
+    {
+        return 'd';
+    }
+
+    return c;
+}
+
+Dictionary<string, string> statemants = new Dictionary<string, string>();
+
+public regex0(string all, string input)
+{
+    this.all = all;
+    this.input = input;
+    statemants.Add("q0-", "q1");
+    statemants.Add("q0+", "q1");
+    statemants.Add("q0d", "q2");
+    statemants.Add("q1d", "q2");
+    statemants.Add("q2d", "q2");
+}
+
+string delta(string a, char c)
+{
+    string st = a + convert(c);
+    if(statemants.ContainsKey(st))
+    {
+        return statemants[st];
+    }
+
+    return "err";
+    // "q0d" "q0-" "q0+"
+    /*switch(a + convert(c))
+    {
+        case "q0-": return "q1";
+        case "q0+": return "q1";
+        case "q0d": return "q2";
+        case "q1d": return "q2";
+        case "q2d": return "q2";
+        default: return "err";
+    }
+    */
+
+    
+}
+
+public bool match()
+{
+    while(i<input.Length && all != "err")
+    {
+        all = delta(all, input[i]);
+        i++;
+    }
+    if(all == "err" || all != "q2")
+    {
+        return false;
+    }
+    return true;
+}
